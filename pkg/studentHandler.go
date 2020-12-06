@@ -10,10 +10,12 @@ import (
 	"net/http"
 )
 
+// StudentCrud is a struct used for holding the crud connection.
 type StudentCrud struct {
 	Database *sql.DB
 }
 
+// InsertToDB is a function used for inserting to the DB.
 func (s *StudentCrud) InsertToDB(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method != http.MethodPost {
@@ -47,4 +49,39 @@ func (s *StudentCrud) InsertToDB(w http.ResponseWriter, req *http.Request) {
 
 	fmt.Fprintf(w, "Insert Successful")
 
+}
+
+// DeleteStudent is the function for handling the deletion of the student from DB.
+func (s *StudentCrud) DeleteStudent(w http.ResponseWriter, req *http.Request) {
+
+	if req.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprintf(w, "invalid_http_method")
+		return
+	}
+
+	id := req.URL.Query()["id"][0]
+
+	log.Println("Request Received for deleting student", id)
+
+	result, err := s.Database.Exec("delete from student_info where id = ?", id)
+
+	if err != nil {
+
+		log.Println("Error while deleting ", err)
+		fmt.Fprintf(w, "Error while deletion")
+
+	} else {
+		rows, err := result.RowsAffected()
+		if err != nil {
+			log.Println("Error while deleting ", err)
+			fmt.Fprintf(w, "Not able to delete")
+
+		} else if rows == 1 {
+			fmt.Fprintf(w, "Deletion Successful")
+		} else {
+			fmt.Fprintf(w, "No rows affected. Please check Id")
+		}
+
+	}
 }

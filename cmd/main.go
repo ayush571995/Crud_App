@@ -27,6 +27,8 @@ func main() {
 
 	http.HandleFunc("/student/insert", studentCrud.InsertToDB)
 
+	http.HandleFunc("/student/delete", studentCrud.DeleteStudent)
+
 	http.ListenAndServe(":8080", nil)
 
 }
