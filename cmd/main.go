@@ -2,7 +2,6 @@ package main
 
 import (
 	"crud_app/internal/database"
-	"crud_app/pkg"
 	"fmt"
 	"net/http"
 )
@@ -21,13 +20,17 @@ func main() {
 		panic("DB connection not successful")
 	}
 
-	studentCrud := pkg.StudentCrud{db}
+	studentCrud := database.NewUserDBImpl(db)
+
+	studentFetcher := database.InitStudentCrud(studentCrud)
 
 	http.HandleFunc("/ping", ping)
 
-	http.HandleFunc("/student/insert", studentCrud.InsertToDB)
+	http.HandleFunc("/student/insert", studentFetcher.InsertToDB)
 
-	http.HandleFunc("/student/delete", studentCrud.DeleteStudent)
+	http.HandleFunc("/student/getByID", studentFetcher.GetByID)
+
+	http.HandleFunc("/student/getAll", studentFetcher.GetAll)
 
 	http.ListenAndServe(":8080", nil)
 
