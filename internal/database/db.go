@@ -16,6 +16,7 @@ type Student struct {
 	LastName  string `json:"lastName"`
 }
 
+//InitDB initializes the DB connection.
 func InitDB() (*sql.DB, error) {
 	db, err := sql.Open("mysql", "root:1234@/students")
 	if err != nil {
