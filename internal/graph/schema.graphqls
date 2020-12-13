@@ -1,0 +1,10 @@
+type Student{
+    id: ID!
+    firstName: String!
+    lastName: String!
+}
+
+
+type Query{
+    allStudents: [Student!]!
+}
