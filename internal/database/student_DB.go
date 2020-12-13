@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -71,5 +72,6 @@ func (s StudentDB) FetchByID(id int64) (*Student, error) {
 		}
 		return &Student{FirstName: firstName, LastName: lastName}, nil
 	}
-	return nil, nil
+	log.Println("No matching Id found for id ", id)
+	return nil, fmt.Errorf("Invalid Id ")
 }
